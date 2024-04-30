@@ -5,21 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault(); // Prevent form submission
         }
     });
-
-    // Initial call to set up options based on predefined data
-    setupInitialOptions();
 });
-
-function setupInitialOptions() {
-    // This function assumes that 'data' has a generic set of options to be used for any entity
-    const select = document.getElementById('initialOptions');
-    Object.keys(data).forEach(key => {
-        const option = document.createElement('option');
-        option.value = key;
-        option.textContent = key;
-        select.appendChild(option);
-    });
-}
 
 function createEntitySection() {
     const input = document.getElementById('entityInput');
@@ -28,7 +14,6 @@ function createEntitySection() {
         input.value = ''; // Clear input for next entry
         const container = document.getElementById('entitySectionsContainer');
 
-        // Create the section container
         const section = document.createElement('div');
         section.className = 'entity-section';
         section.style.border = "1px solid #ccc";
@@ -44,27 +29,62 @@ function createEntitySection() {
         closeButton.onclick = function() {
             container.removeChild(section);
         };
+        section.appendChild(closeButton);
 
         // Create the header
         const header = document.createElement('h2');
         header.textContent = entityName;
-
-        // Append elements to the section
-        section.appendChild(closeButton);
         section.appendChild(header);
 
-        // Assuming there's a generic set of options applicable to all entities
-        const select = document.createElement('select');
-        Object.keys(data).forEach(key => {
-            const option = document.createElement('option');
-            option.value = key;
-            option.textContent = key;
-            select.appendChild(option);
-        });
-        section.appendChild(select);
-
+        setupDynamicDropdown(section, data, entityName); // Initial dropdown setup
         container.appendChild(section);
     } else {
         console.error("Empty input for entity name.");
     }
 }
+
+function setupDynamicDropdown(parentElement, currentData, entityName) {
+    if (!currentData || typeof currentData !== 'object') return; // Stop if no further data
+
+    const select = document.createElement('select');
+    const defaultOption = document.createElement('option');
+    defaultOption.textContent = "Select";
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    select.appendChild(defaultOption);
+
+    Object.keys(currentData).forEach(key => {
+        if (key !== "result") {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = key;
+            select.appendChild(option);
+        }
+    });
+
+    select.onchange = () => {
+        while (select.nextSibling) {
+            select.parentNode.removeChild(select.nextSibling);
+        }
+        setupDynamicDropdown(select.parentNode, currentData[select.value], entityName);
+    };
+
+    parentElement.appendChild(select);
+}
+
+function produceResults() {
+    const results = [];
+    const sections = document.querySelectorAll('.entity-section');
+    sections.forEach(section => {
+        const selects = section.querySelectorAll('select');
+        const entityResults = Array.from(selects).map(select => select.value).filter(val => val !== "Select");
+        results.push({
+            entity: section.firstChild.textContent, // Assuming the entity name is stored as the first child (header)
+            selections: entityResults
+        });
+    });
+
+    console.log(results); // For now, just logging the results
+    // Later, implement Excel generation from 'results'
+}
+
