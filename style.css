@@ -1,6 +1,18 @@
 /* style.css */
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-  }
-  
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.selection-container {
+  margin-bottom: 10px; /* Space between each selection container */
+}
+
+label {
+  margin-right: 10px; /* Space between the label and the select box */
+  white-space: nowrap; /* Prevents the label from wrapping */
+}
+
+select {
+  width: auto; /* Adjust as needed */
+}

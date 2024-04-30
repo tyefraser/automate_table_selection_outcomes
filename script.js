@@ -44,33 +44,59 @@ function createEntitySection() {
 }
 
 function setupDynamicDropdown(parentElement, currentData, entityName) {
-    if (!currentData || typeof currentData !== 'object') return; // Stop if no further data
+    if (!currentData || typeof currentData !== 'object' || Object.keys(currentData).includes("result")) {
+        if (currentData.result) {
+            displayResults(parentElement, currentData.result, entityName);
+        }
+        return;
+    }
 
-    const select = document.createElement('select');
-    const defaultOption = document.createElement('option');
-    defaultOption.textContent = "Select";
-    defaultOption.disabled = true;
-    defaultOption.selected = true;
-    select.appendChild(defaultOption);
+    Object.entries(currentData).forEach(([key, value]) => {
+        // Create container for label and options
+        const selectionContainer = document.createElement('div');
+        selectionContainer.className = 'selection-container';
 
-    Object.keys(currentData).forEach(key => {
-        if (key !== "result") {
+        // Create a descriptive label
+        const label = document.createElement('label');
+        label.textContent = key + ":";
+        selectionContainer.appendChild(label);
+
+        // Create the dropdown for the current context
+        const select = document.createElement('select');
+        const defaultOption = document.createElement('option');
+        defaultOption.textContent = "Select";
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        select.appendChild(defaultOption);
+        Object.keys(value).forEach(subKey => {
             const option = document.createElement('option');
-            option.value = key;
-            option.textContent = key;
+            option.value = subKey;
+            option.textContent = subKey;
             select.appendChild(option);
-        }
+        });
+        select.onchange = () => {
+            // Remove any elements added after this select in the same container
+            while (select.nextSibling) {
+                select.parentNode.removeChild(select.nextSibling);
+            }
+            // Append new dynamic dropdown to the parent container, not next to this select
+            setupDynamicDropdown(parentElement, value[select.value], entityName);
+        };
+
+        selectionContainer.appendChild(select);
+        parentElement.appendChild(selectionContainer); // Ensure this appends to the general container
     });
-
-    select.onchange = () => {
-        while (select.nextSibling) {
-            select.parentNode.removeChild(select.nextSibling);
-        }
-        setupDynamicDropdown(select.parentNode, currentData[select.value], entityName);
-    };
-
-    parentElement.appendChild(select);
 }
+
+
+
+function displayResults(parentElement, resultArray, entityName) {
+    // This function can display results or store them for later use
+    const resultsDiv = document.createElement('div');
+    resultsDiv.textContent = "Results for " + entityName + ": " + resultArray.join(", ");
+    parentElement.appendChild(resultsDiv);
+}
+
 
 function produceResults() {
     const results = [];
