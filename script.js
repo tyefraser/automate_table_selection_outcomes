@@ -45,14 +45,14 @@ function createEntitySection() {
 
 function setupDynamicDropdown(parentElement, currentData, entityName) {
     if (!currentData || typeof currentData !== 'object' || Object.keys(currentData).includes("result")) {
-        if (currentData.result) {
+        if (currentData && currentData.result) {
             displayResults(parentElement, currentData.result, entityName);
         }
-        return;
+        return; // Stop if no further data or reached a result
     }
 
     Object.entries(currentData).forEach(([key, value]) => {
-        // Create container for label and options
+        // Create a container for each selection level
         const selectionContainer = document.createElement('div');
         selectionContainer.className = 'selection-container';
 
@@ -68,26 +68,28 @@ function setupDynamicDropdown(parentElement, currentData, entityName) {
         defaultOption.disabled = true;
         defaultOption.selected = true;
         select.appendChild(defaultOption);
+
         Object.keys(value).forEach(subKey => {
             const option = document.createElement('option');
             option.value = subKey;
             option.textContent = subKey;
             select.appendChild(option);
         });
+
+        // Handle changes in selection
         select.onchange = () => {
-            // Remove any elements added after this select in the same container
-            while (select.nextSibling) {
-                select.parentNode.removeChild(select.nextSibling);
+            // Remove all subsequent sibling elements of the selectionContainer
+            while (selectionContainer.nextSibling) {
+                selectionContainer.parentNode.removeChild(selectionContainer.nextSibling);
             }
-            // Append new dynamic dropdown to the parent container, not next to this select
+            // Setup the new dropdown based on the selected value
             setupDynamicDropdown(parentElement, value[select.value], entityName);
         };
 
         selectionContainer.appendChild(select);
-        parentElement.appendChild(selectionContainer); // Ensure this appends to the general container
+        parentElement.appendChild(selectionContainer);
     });
 }
-
 
 
 function displayResults(parentElement, resultArray, entityName) {
@@ -99,34 +101,42 @@ function displayResults(parentElement, resultArray, entityName) {
 
 
 function produceResults() {
-    const results = [];
+    const entityDetails = [];
+    const selectionPaths = [];
     const sections = document.querySelectorAll('.entity-section');
-
+    
     // Iterate over each section to collect results
     sections.forEach(section => {
         const selects = section.querySelectorAll('select');
         const entityResults = Array.from(selects).map(select => select.value);
         const documents = entityResults[entityResults.length - 1]; // Assuming last selection contains the documents
-        
-        // Collect entity name and documents
         const entityName = section.querySelector('h2').textContent;
-        results.push({
+
+        // For Sheet 1
+        entityDetails.push({
             Entity: entityName,
-            Documents: documents
+            Status: "Not Started", // Default status
+            Documents: documents,
+            Notes: "" // Empty notes for user input
+        });
+
+        // For Sheet 2
+        selectionPaths.push({
+            Entity: entityName,
+            Selections: entityResults.join(" > ") // Path of selections made
         });
     });
 
-    // Create a new workbook and add a worksheet
+    // Create workbook and sheets
     const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(results);
-    
-    // Append worksheet to workbook
-    XLSX.utils.book_append_sheet(wb, ws, "Results");
-    
-    // Generate buffer
-    XLSX.write(wb, {bookType:'xlsx', type: 'binary'});
-    
-    // Trigger download
+    const ws1 = XLSX.utils.json_to_sheet(entityDetails);
+    const ws2 = XLSX.utils.json_to_sheet(selectionPaths);
+
+    // Append worksheets to workbook
+    XLSX.utils.book_append_sheet(wb, ws1, "Entity Documents");
+    XLSX.utils.book_append_sheet(wb, ws2, "Selection Paths");
+
+    // Write workbook
     XLSX.writeFile(wb, "EntityDocuments.xlsx");
 }
 
