@@ -101,16 +101,32 @@ function displayResults(parentElement, resultArray, entityName) {
 function produceResults() {
     const results = [];
     const sections = document.querySelectorAll('.entity-section');
+
+    // Iterate over each section to collect results
     sections.forEach(section => {
         const selects = section.querySelectorAll('select');
-        const entityResults = Array.from(selects).map(select => select.value).filter(val => val !== "Select");
+        const entityResults = Array.from(selects).map(select => select.value);
+        const documents = entityResults[entityResults.length - 1]; // Assuming last selection contains the documents
+        
+        // Collect entity name and documents
+        const entityName = section.querySelector('h2').textContent;
         results.push({
-            entity: section.firstChild.textContent, // Assuming the entity name is stored as the first child (header)
-            selections: entityResults
+            Entity: entityName,
+            Documents: documents
         });
     });
 
-    console.log(results); // For now, just logging the results
-    // Later, implement Excel generation from 'results'
+    // Create a new workbook and add a worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(results);
+    
+    // Append worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Results");
+    
+    // Generate buffer
+    XLSX.write(wb, {bookType:'xlsx', type: 'binary'});
+    
+    // Trigger download
+    XLSX.writeFile(wb, "EntityDocuments.xlsx");
 }
 
