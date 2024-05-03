@@ -105,8 +105,6 @@ function displayResults(parentElement, results, entityName) {
     }
 
     const table = createNewElement('table');
-    table.style.width = '100%';
-    table.border = '1';
 
     const thead = createNewElement('thead');
     const tbody = createNewElement('tbody');
@@ -158,10 +156,10 @@ function appendStatusCell(row) {
 
 function appendNotesCell(row) {
     const cell = row.insertCell();
-    const input = createNewElement('input');
-    input.type = 'text';
-    input.placeholder = 'Add notes here';
-    cell.appendChild(input);
+    const textarea = document.createElement('textarea');
+    textarea.placeholder = 'Add notes here';
+    textarea.rows = 4;  // Set the visible number of lines in the textarea
+    cell.appendChild(textarea);
 }
 
 

@@ -29,6 +29,13 @@ select {
   width: auto; /* Adjust as needed */
 }
 
+/* Styles for table headers and cells to add borders */
+table th, table td {
+  border: 1px solid #ccc; /* Light grey border for a subtle effect */
+  padding: 8px; /* Add some padding for content inside cells */
+  text-align: left; /* Align text to the left; adjust as needed */
+}
+
 /* Styles for tables */
 table {
   width: 100%; /* Full width tables */
@@ -38,4 +45,10 @@ table {
 /* Styles for input fields within tables for notes */
 input[type="text"] {
   width: 100%; /* Make text inputs expand to fill their cell */
+}
+
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
