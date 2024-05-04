@@ -6,13 +6,22 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Dynamic Entity Input and Selection</h1>
-    <div>
+    <header>
+        <h1>BB Credit Document Collection Tool</h1>
+    </header>
+
+    <div class="section">
+        <h1>Dynamic Entity Input and Selection</h1>
+        <p>Please enter the name of the individual or entity:</p>
         <input type="text" id="entityInput" placeholder="Enter entity name">
-        <button onclick="createEntitySection()">Add Entity</button>
+        <button class="button blue" onclick="createEntitySection()">Add Entity</button>
     </div>
+    
     <div id="entitySectionsContainer"></div>
-    <button onclick="produceResults()">Produce Results</button>
+
+    <footer>
+        <button class="button blue" onclick="produceResults()">Generate Excel with results</button>
+    </footer>
 
     <!-- Load the data variable from external JS file -->
     <script src="data/data.js"></script>
@@ -20,5 +29,6 @@
     <script src="script.js"></script>
     <!-- Load the XLSX library -->
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
 </body>
 </html>

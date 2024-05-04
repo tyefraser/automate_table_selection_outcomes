@@ -1,33 +1,143 @@
-/* style.css */
-.entity-section {
-  border: 1px solid #ccc;
-  margin: 10px;
-  padding: 10px;
-  position: relative;
+:root {
+  --primary-color: #000000;
+  --secondary-color: #F7F7F7; /* A lighter, vibrant blue */
+
+  --section-color: #FFFFFF;
+  --blue-color:#0C6CCE;
+
+  --accent-color: #f8f8f8; /* A very light gray as background */
+  --text-color: #333; /* A dark gray for general text */
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A common sans-serif font */
 }
 
-.close-button {
+/* HEADER SECTION ------------------------------------------------------------------------------- */
+header {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    width: 100%; /* Ensure it covers full width */
+    position: fixed; /* Fix position to top */
+    top: 0; /* Stick to the top */
+    left: 0; /* Align left */
+    z-index: 1000; /* Ensure it stays on top of other content */
+}
+
+/* Adds top margin to the first <div> after the header */
+header + div {
+  margin-top: 70px;
+}
+
+header h1 {
+    margin: 0; /* Remove default margin */
+    padding: 10px 20px; /* Adjustable padding to control height */
+}
+
+#entityInput {
+  margin-right: 70px; /* Adjust this value to increase or decrease the space */
+  margin-bottom: 20px; /* Adds space between sections */
+}
+
+
+/* FOOTER SECTION ------------------------------------------------------------------------------- */
+footer {
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+  width: 100%; /* Ensure it covers full width */
+  position: fixed; /* Fix position */
+  bottom: 0; /* Stick to the bottom */
+  left: 0; /* Align left */
+  z-index: 1000; /* Ensure it stays on top of other content */
+  padding: 10px 0; /* Add some vertical padding */
+}
+
+/* BODY SECTION --------------------------------------------------------------------------------- */
+body {
+  margin: 0; /* Remove default margin */
+  font-family: var(--font-family);
+  /* font-family: Arial, sans-serif; */
+  padding: 20px;
+  /* padding-top: 70px; /* Adjust this value to match the height of your header */
+  padding-bottom: 100px; /* Adjust this value based on the height of your footer */
+  background-color: var(--secondary-color);
+  
+}
+
+/* SPECIFIC ELEMENTS SECTION -------------------------------------------------------------------- */
+
+/* Styles for input fields within tables for notes */
+input[type="text"] {
+  width: 100%; /* Make text inputs expand to fill their cell */
+}
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* Button style */
+.button {
+  background-color: transparent; /* Clear background */
+  padding: 10px 20px; /* Padding around the text */
+  font-size: 16px; /* Text size */
+  font-family: Arial, sans-serif; /* Font style */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  outline: none; /* Remove default focus outline */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+}
+/* Specific styles for general buttons */
+.blue {
+  color: #0073e6; /* Blue text color */
+  border: 2px solid #0073e6; /* Blue border */
+}
+.blue:hover {
+  background-color: #0073e6; /* Blue background on hover */
+  color: white; /* White text on hover */
+}
+/* Specific styles for the close button */
+.close {
+  color: red; /* Blue text color */
+  border: 2px solid red; /* Blue border */
   position: absolute;
   right: 10px;
 }
+.close:hover {
+  background-color: red; /* Blue background on hover */
+  color: white; /* White text on hover */
+}
 
+
+/* General style for all section divs */
+.section {
+  padding: 10px; /* Adds padding inside the section */
+  margin-bottom: 5px; /* Adds space between sections */
+  background-color: var(--section-color);
+  border: 1px solid #ccc; /* Optional: adds a border around each section */
+}
+
+.entity-section {
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: var(--section-color);
+  border: 1px solid #ccc;
+  margin: 10px;
+  position: relative;
+}
+
+
+/* Drop down */
 .selection-container {
-  margin-bottom: 10px; /* Space between each selection container */
+  margin-bottom: 0px; /* Space between each selection container */
 }
-
-body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-}
-
 label {
   margin-right: 10px; /* Space between the label and the select box */
   white-space: nowrap; /* Prevents the label from wrapping */
 }
-
 select {
   width: auto; /* Adjust as needed */
 }
+
 
 /* Styles for table headers and cells to add borders */
 table th, table td {
@@ -35,20 +145,9 @@ table th, table td {
   padding: 8px; /* Add some padding for content inside cells */
   text-align: left; /* Align text to the left; adjust as needed */
 }
-
 /* Styles for tables */
 table {
   width: 100%; /* Full width tables */
   border: 1px solid black; /* Basic border for visibility */
-}
-
-/* Styles for input fields within tables for notes */
-input[type="text"] {
-  width: 100%; /* Make text inputs expand to fill their cell */
-}
-
-textarea {
-  width: 100%;
-  box-sizing: border-box;
-  overflow-y: auto;
+  margin-top: 5px; /* Default spacing */
 }

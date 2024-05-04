@@ -9,16 +9,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Setup to handle close button clicks within the container
     document.getElementById('entitySectionsContainer').addEventListener('click', function(event) {
-        if (event.target.className === 'close-button') {
+        if (event.target.className === 'button close') {
             event.target.parentElement.remove(); // Remove the section
         }
     });    
 });
 
+// Array to store existing entity names
+let existingEntities = [];
+
 function createEntitySection() {
     const input = document.getElementById('entityInput');
     const entityName = input.value.trim();
     if (entityName) {
+
+        // Check if the entity name already exists
+        if (existingEntities.includes(entityName)) {
+            alert("This entity name already exists. Please enter a different name.");
+            //input.value = ''; // Optionally clear the input or leave the name for editing
+            return; // Exit the function to stop adding the new section
+        }
+        // Add the new entity name to the array of existing entities
+        existingEntities.push(entityName);
+
         // Clear input for next entry
         input.value = ''; 
 
@@ -31,7 +44,7 @@ function createEntitySection() {
 
         // Create the close button
         const closeButton = document.createElement('button');
-        closeButton.className = 'close-button';
+        closeButton.className = 'button close';
         closeButton.textContent = 'X';
         closeButton.onclick = () => container.removeChild(section);
         section.appendChild(closeButton);
